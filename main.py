@@ -1,6 +1,7 @@
 import cv2
 from PoseModule import PoseDetector
 
+
 def main():
     cap = cv2.VideoCapture(0)
     detector = PoseDetector()
