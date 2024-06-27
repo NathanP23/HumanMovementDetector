@@ -39,3 +39,14 @@ class PoseDetector:
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 landmarks.append((id, cx, cy))
         return landmarks
+
+    def draw_bounding_box(self, image, landmarks, draw=True):
+        if landmarks:
+            x_min = min([lm[1] for lm in landmarks])
+            x_max = max([lm[1] for lm in landmarks])
+            y_min = min([lm[2] for lm in landmarks])
+            y_max = max([lm[2] for lm in landmarks])
+
+            if draw:
+                cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+        return image

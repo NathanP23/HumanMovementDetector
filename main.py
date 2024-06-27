@@ -1,7 +1,6 @@
 import cv2
 from PoseModule import PoseDetector
 
-
 def main():
     cap = cv2.VideoCapture(0)
     detector = PoseDetector()
@@ -14,9 +13,8 @@ def main():
         img = detector.find_pose(img)
         landmarks = detector.get_landmarks(img)
 
-        # Display landmarks on image if needed
-        for lm in landmarks:
-            cv2.circle(img, (lm[1], lm[2]), 5, (255, 0, 0), cv2.FILLED)
+        # Draw bounding box around the person
+        img = detector.draw_bounding_box(img, landmarks)
 
         cv2.imshow("Image", img)
 
