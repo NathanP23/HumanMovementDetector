@@ -26,9 +26,8 @@ class PoseDetector:
     def find_pose(self, image, draw=True):
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         self.results = self.pose.process(image_rgb)
-        if self.results.pose_landmarks:
-            if draw:
-                self.mp_drawing.draw_landmarks(image, self.results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS)
+        if self.results.pose_landmarks and draw:
+            self.mp_drawing.draw_landmarks(image, self.results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS)
         return image
 
     def get_landmarks(self, image):
@@ -40,13 +39,16 @@ class PoseDetector:
                 landmarks.append((id, cx, cy))
         return landmarks
 
-    def draw_bounding_box(self, image, landmarks, draw=True):
+    def draw_bounding_box(self, image, landmarks, rect, label_index=1, draw=True):
+        x, y, w, h = rect
         if landmarks:
-            x_min = min([lm[1] for lm in landmarks])
-            x_max = max([lm[1] for lm in landmarks])
-            y_min = min([lm[2] for lm in landmarks])
-            y_max = max([lm[2] for lm in landmarks])
+            x_min = x + min([lm[1] for lm in landmarks])
+            x_max = x + max([lm[1] for lm in landmarks])
+            y_min = y + min([lm[2] for lm in landmarks])
+            y_max = y + max([lm[2] for lm in landmarks])
 
             if draw:
                 cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+                label = f"human #{label_index}"
+                cv2.putText(image, label, (x_min, y_min - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
         return image
